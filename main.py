@@ -40,3 +40,7 @@ async def sign_up(request: SignUpRequest):
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the API. Please use /sign_up endpoint to sign up."}
+
+@app.head("/")
+async def head_root():
+    return
