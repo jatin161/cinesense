@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "cinesense",
+  "private_key_id": "5b6462fd7feb4bff32eb61f224ac877a7601941b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC58Q9rWMKHN06b\nH8/5kssYQynjLejqHJEjbxgcD1g2zx14Y8kCqhmAarviDpVcm93bYX08tHl43XYS\nRDIGii06C3lQJ/CGGPcXoRlK90/KpJyNx9zq8JHIdBgfjfmqsfScdyhMfmaG6OTT\nOoliszC6BeWEe/0gdfEl5Nqx4alat8m1G305n2dbFN/UjLu8DD3IUBd+Tr2QzJ0H\nS1zlAP2Pj5/19KJNGdJS5rGwLWO1FJjx6fbjiraJg1PJAgxdHSeTjmZNDiQpTxv4\nqOtkjtlwxm9INd38/s/AGrHKEAumWDqU4c8NI6tOKsbACflg1i+BRfPEPKyS/Q/i\nmy3y8HvXAgMBAAECggEAIi1K1kJUTyI9UooAYjE3H1iJBHbVzuI9UzQCTHYNktVy\n50QAGHtHgLEdo6lmjsUffElpCZVqlmquXyElyMnxEjA1tiQBM8S29iLoUT0v72Fe\nXTkVRCG/ygZ8wKAJ+fQHsBK+14CMO9Pm62RhCEFDfY3D6BwaJLNJBdwQzo1Z4ZCC\nTbR7Ww6UcOQFTkaZ9Z/tIQ6u7xbk3Rld5Sp7uR+cfVRy+gwMf6mWYAhkv+ipZ2Q0\n9jYETi3I6+TVsNtKYjQuJe2xZDNEdqeb8zEhAVbSpukzmOmmPqyv6Kw8AWwiZZC4\ni+JizwyHHj/tPw64r8LjSGKIaJ8F5Mjexx3HV5GdQQKBgQDdrKA0v0m9X386BbEi\nv+CU3bItJoOcsQ8zJdwoZg+h9YUwzscT2ehI3Nycaeh/nNDm87+nJXNEo5gLRJb6\nyFO95dpPyHNqLb0WGMS6rxjozKgyPTnJAGEPhTCxUMCC2SDmSQIzNzdfTOwd6Evx\nLCpD0FpbQX4vk6wD4gpwya5FEQKBgQDWu/VJ7svVxdmbY2kLhx4gq8zh2Nal3ko1\nFGNpokcNtwIjssfrHT/GYIQjH9DT8TY2zuFdNkpMaqnWGpAl6KJ4zrt0n59uKF4n\n0WrLn//+CRFOd44kiUilYaHGCdzn2Ksbadx9wUfC6e417ymdTHCw1sCmbWtXC6s/\nxaS0t3+SZwKBgF5BOlVzSI1m/5fSN8FIyNtDcLFWAPwtJQNgg74Bt3/r/1gDdA5y\nxxvEHWG8folUSlcJKWKOv/ZdgRa5cWDssP67rxnhZ4GsNQwiN/QQ44yJCLNj6SAY\nMy0AOvYKGfEJFb4VKQRR5A93i6Yj0baYSthOzTykGl1scuWrxTiz6I+hAoGAR7XR\nPnVuwN8nwoq6Q81FtGdrLmj5lb7cTUmXwWkeDWh2YHGN7eiAqcEFn606Ue0Vy8ve\n2wAMY+Si/wsz5FUCHRH86/96gJEekHGRFptCJBXnH6sxXuYxynkGS1pz2UE0Mx1x\nMtXfHyp8EKrj3NHwOD4fa/TSiektsUhRrsAw7DUCgYBPi+E8v063uipopDaxMwXK\nf33CrdOx4s9Yg1ap5YkeOGu39n13kjc9BsIfGBRj1IOgRyfGKZwbHXWTTcgDqg0Q\nfUTktEuaV50R0pWw8eLnk0OyEMWeOVpFAUuKya5l6tIirLIqR8WCHaVhDyYqLmD7\nSDgFdQ2yUnzc1xfhf/RG9A==\n-----END PRIVATE KEY-----\n",
+  "client_email": "cinesense@cinesense.iam.gserviceaccount.com",
+  "client_id": "116618570015751154686",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cinesense%40cinesense.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
