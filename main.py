@@ -29,15 +29,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
-
-# Define route to handle GET and HEAD requests to the root URL ("/")
-@app.get("/")
-@app.head("/")
-async def read_root():
-    return {"message": "Welcome to the API. Please use /sign_up endpoint to sign up."}
 
 @app.post("/sign_up")
 async def sign_up(request: SignUpRequest):
