@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -23,7 +23,6 @@ async def sign_up(request: SignUpRequest):
     name = request.name
     email = request.email
     password = request.password
-    call_type = request.call_type
     
     try:
         # Find the next available row
@@ -37,3 +36,7 @@ async def sign_up(request: SignUpRequest):
         return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the API. Please use /sign_up endpoint to sign up."}
