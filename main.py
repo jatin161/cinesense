@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import gspread
@@ -29,9 +29,15 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Include OPTIONS method
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+# Define route to handle GET and HEAD requests to the root URL ("/")
+@app.get("/")
+@app.head("/")
+async def read_root():
+    return {"message": "Welcome to the API. Please use /sign_up endpoint to sign up."}
 
 @app.post("/sign_up")
 async def sign_up(request: SignUpRequest):
@@ -51,8 +57,3 @@ async def sign_up(request: SignUpRequest):
         return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-# Define OPTIONS route for CORS preflight checks
-@app.options("/sign_up")
-async def options_sign_up():
-    return {}
