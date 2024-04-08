@@ -23,7 +23,7 @@ async def sign_up(request: SignUpRequest):
     name = request.name
     email = request.email
     password = request.password
-    call_type = request.call_type
+  
     
     try:
         # Find the next available row
