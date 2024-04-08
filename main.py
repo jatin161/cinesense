@@ -48,6 +48,6 @@ async def sign_up(request: SignUpRequest):
         sheet.update_cell(next_row, 2, email)
         sheet.update_cell(next_row, 3, password)
         
-        return {"success": True}
+        return "success"
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
