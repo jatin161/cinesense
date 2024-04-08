@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -19,25 +18,12 @@ class SignUpRequest(BaseModel):
     email: str
     password: str
 
-# Configure CORS
-origins = [
-    "http://localhost",
-    "http://localhost:3000",  # Adjust this to match your React app's origin
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["*"],
-)
-
 @app.post("/sign_up")
 async def sign_up(request: SignUpRequest):
     name = request.name
     email = request.email
     password = request.password
+    call_type = request.call_type
     
     try:
         # Find the next available row
@@ -48,6 +34,6 @@ async def sign_up(request: SignUpRequest):
         sheet.update_cell(next_row, 2, email)
         sheet.update_cell(next_row, 3, password)
         
-        return "success"
+        return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
