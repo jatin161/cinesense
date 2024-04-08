@@ -1,5 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import gspread
@@ -22,8 +21,7 @@ class SignUpRequest(BaseModel):
 
 # Configure CORS
 origins = [
-    "http://localhost",
-    "http://localhost:3000",  # Adjust this to match your React app's origin
+    "https://cine-sense.netlify.app",  # Adjust this to match your Netlify app's origin
 ]
 
 app.add_middleware(
@@ -33,11 +31,6 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
-
-@app.get("/")
-@app.head("/")
-async def read_root():
-    return JSONResponse(content={"message": "Welcome to the API. Please use /sign_up endpoint to sign up."})
 
 @app.post("/sign_up")
 async def sign_up(request: SignUpRequest):
@@ -54,6 +47,12 @@ async def sign_up(request: SignUpRequest):
         sheet.update_cell(next_row, 2, email)
         sheet.update_cell(next_row, 3, password)
         
-        return {"success": True}
+        # Add the 'Access-Control-Allow-Origin' header
+        response_headers = {
+            "Access-Control-Allow-Origin": "https://cine-sense.netlify.app",
+            "Access-Control-Allow-Credentials": "true",
+        }
+        
+        return {"success": True}, response_headers
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return {"success": False, "error": str(e)}
