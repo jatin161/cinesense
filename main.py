@@ -11,7 +11,7 @@ app = FastAPI()
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
 # Authenticate using credentials
-credentials = ServiceAccountCredentials.from_json_keyfile_name(r"cinesense-5b6462fd7feb.json", scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Users\jsjat\Downloads\cinesense-5b6462fd7feb.json", scope)
 client = gspread.authorize(credentials)
 sheet = client.open("cinesense").sheet1
 all_data = sheet.get_all_values()
@@ -36,6 +36,14 @@ class SignUpRequest(BaseModel):
     name: str
     email: str
     password: str
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the FastAPI application!"}
+
+@app.head("/")
+async def head_root():
+    return
 
 @app.post("/sign_up")
 async def sign_up(request: SignUpRequest):
