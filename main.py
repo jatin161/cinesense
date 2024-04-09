@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd
 
 app = FastAPI()
 
@@ -10,20 +11,19 @@ app = FastAPI()
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
 # Authenticate using credentials
-credentials = ServiceAccountCredentials.from_json_keyfile_name("cinesense-5b6462fd7feb.json", scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Users\jsjat\Downloads\cinesense-5b6462fd7feb.json", scope)
 client = gspread.authorize(credentials)
 sheet = client.open("cinesense").sheet1
+all_data = sheet.get_all_values()
 
-class SignUpRequest(BaseModel):
-    name: str
-    email: str
-    password: str
+data = pd.DataFrame(all_data[1:], columns=list(all_data[0]))
 
-# Configure CORS
+# Define CORS origins
 origins = [
     "https://cine-sense.netlify.app",  # Adjust this to match your Netlify app's origin
 ]
 
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -31,6 +31,11 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+class SignUpRequest(BaseModel):
+    name: str
+    email: str
+    password: str
 
 @app.post("/sign_up")
 async def sign_up(request: SignUpRequest):
@@ -56,3 +61,17 @@ async def sign_up(request: SignUpRequest):
         return {"success": True}, response_headers
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+@app.post("/login")
+async def login(email: str, password: str):
+    try:
+        # Perform login authentication
+        user_password = list(data[data['email'] == email]['password'])
+        if not user_password:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        if user_password[0] == password:
+            return {"success": True}
+        else:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
