@@ -42,6 +42,19 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+def fetch_poster(movie_id):
+    try:
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US"
+        data = requests.get(url).json()
+        poster_path = data.get('poster_path')
+        if poster_path:
+            full_path = f"https://image.tmdb.org/t/p/w500/{poster_path}"
+            return full_path
+        else:
+            return None
+    except Exception as e:
+        return None
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the FastAPI application!"}
@@ -107,17 +120,11 @@ def login(email, password):
 
 @app.get("/fetch_poster/{movie_id}")
 async def fetch_poster_endpoint(movie_id: int):
-    try:
-        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US"
-        data = requests.get(url).json()
-        poster_path = data.get('poster_path')
-        if poster_path:
-            full_path = f"https://image.tmdb.org/t/p/w500/{poster_path}"
-            return {"poster_url": full_path}
-        else:
-            return {"poster_url": None}
-    except Exception as e:
-        return {"error": str(e)}
+    poster_url = fetch_poster(movie_id)
+    if poster_url:
+        return {"poster_url": poster_url}
+    else:
+        return {"error": "Poster not found"}
 
 @app.get("/movie_detail/{movie_id}")
 async def movie_detail_endpoint(movie_id: int):
