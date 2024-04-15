@@ -37,6 +37,10 @@ class SignUpRequest(BaseModel):
     email: str
     password: str
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the FastAPI application!"}
@@ -71,8 +75,11 @@ async def sign_up(request: SignUpRequest):
         return {"success": False, "error": str(e)}
 
 @app.post("/login")
-async def login(email: str, password: str):
-    try:
-        return list(data[data['email']== email]['password'])[0]==password
-    except :
-        return False
+async def login(request: LoginRequest):
+    email = request.email
+    password = request.password
+    
+    if login(email, password):
+        return {"success": True}
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
