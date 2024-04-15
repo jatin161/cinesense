@@ -75,7 +75,7 @@ async def sign_up(request: SignUpRequest):
         return {"success": False, "error": str(e)}
 
 @app.post("/login")
-async def login(request: LoginRequest):
+async def login_endpoint(request: LoginRequest):
     email = request.email
     password = request.password
     
@@ -83,3 +83,23 @@ async def login(request: LoginRequest):
         return {"success": True}
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+def login(email, password):
+    try:
+        import gspread
+        from oauth2client.service_account import ServiceAccountCredentials
+        import pandas as pd
+
+        # Define the scope of access
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+
+        # Authenticate using credentials
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(r"C:\Users\jsjat\Downloads\cinesense-5b6462fd7feb.json", scope)
+        client = gspread.authorize(credentials)
+        sheet = client.open("cinesense").sheet1
+        all_data = sheet.get_all_values()
+
+        data=pd.DataFrame(all_data[1:],columns=list(all_data[0]))
+        return list(data[data['email']== email]['password'])[0]==password
+    except :
+        return False
