@@ -73,13 +73,6 @@ async def sign_up(request: SignUpRequest):
 @app.post("/login")
 async def login(email: str, password: str):
     try:
-        # Perform login authentication
-        user_password = list(data[data['email'] == email]['password'])
-        if not user_password:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
-        if user_password[0] == password:
-            return {"success": True}
-        else:
-            raise HTTPException(status_code=401, detail="Invalid credentials")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return list(data[data['email']== email]['password'])[0]==password
+    except :
+        return False
