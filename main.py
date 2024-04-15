@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
+import requests
 
 app = FastAPI()
 
@@ -103,3 +104,34 @@ def login(email, password):
         return list(data[data['email']== email]['password'])[0]==password
     except :
         return False
+
+@app.get("/fetch_poster/{movie_id}")
+async def fetch_poster_endpoint(movie_id: int):
+    try:
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US"
+        data = requests.get(url).json()
+        poster_path = data.get('poster_path')
+        if poster_path:
+            full_path = f"https://image.tmdb.org/t/p/w500/{poster_path}"
+            return {"poster_url": full_path}
+        else:
+            return {"poster_url": None}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/movie_detail/{movie_id}")
+async def movie_detail_endpoint(movie_id: int):
+    try:
+        df = pd.read_csv(r'Final_Data.csv')
+        movie_data = df[df['movie_id'] == movie_id]
+        if not movie_data.empty:
+            movie_data['genres'] = movie_data['genres'].str.replace("['", "").str.replace("']", "").str.replace("'", "")
+            movie_data['keywords'] = movie_data['keywords'].str.replace("['", "").str.replace("']", "").str.replace("'", "")
+            movie_data['cast'] = movie_data['cast'].str.replace("['", "").str.replace("']", "").str.replace("'", "")
+            movie_data['crew'] = movie_data['crew'].str.replace("['", "").str.replace("']", "").str.replace("'", "")
+            movie_data['poster'] = movie_data['movie_id'].apply(fetch_poster)
+            return movie_data.to_dict('records')[0]
+        else:
+            return {"error": f"No data found for movie ID: {movie_id}"}
+    except Exception as e:
+        return {"error": str(e)}
