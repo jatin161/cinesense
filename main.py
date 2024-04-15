@@ -70,7 +70,7 @@ async def sign_up(request: SignUpRequest):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-@app.post("/login")
+@app.get("/login")
 async def login(email: str, password: str):
     try:
         # Perform login authentication
