@@ -55,6 +55,34 @@ def fetch_poster(movie_id):
     except Exception as e:
         return None
 
+
+def recommended(movie,no):
+    movies_list = pickle.load(open(r'df_final.pkl', 'rb'))
+    movies = pd.DataFrame(movies_list)
+    movies_list = movies['title_x'].values
+
+    ifile = bz2.BZ2File(r"similarity",'rb')
+    similarity = pickle.load(ifile)
+    index = movies[movies['title_x'] == movie].index[0]
+    distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
+    lis=[]
+    count=0
+    for i in distance[1:]:
+        if(count>no):
+            break
+        elif(fetch_poster(movies.loc[i[0]]['movie_id'])==1):
+            pass
+        else:
+            lis.append({
+                "name":movies.loc[i[0]]['title_x'],
+                "poster":fetch_poster(movies.loc[i[0]]['movie_id'])
+            })
+            count=count+1
+            
+    return lis
+
+
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the FastAPI application!"}
@@ -142,3 +170,12 @@ async def movie_detail_endpoint(movie_id: int):
             return {"error": f"No data found for movie ID: {movie_id}"}
     except Exception as e:
         return {"error": str(e)}
+
+
+@app.get("/recommend/{movie}/{no}")
+async def recommend_movies(movie: str, no: int):
+    recommended_movies = recommended(movie, no)
+    if recommended_movies:
+        return recommended_movies
+    else:
+        return {"error": "No recommendations found"}
