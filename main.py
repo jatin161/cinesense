@@ -6,6 +6,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 import requests
 import pickle
+import json
+import bz2
+
 app = FastAPI()
 
 # Define the scope of access
