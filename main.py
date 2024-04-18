@@ -67,11 +67,11 @@ def recommended(movie,no):
     import json
     import bz2
     
-    movies_list = pickle.load(open(r'C:\Users\jsjat\Downloads\df_final.pkl', 'rb'))
+    movies_list = pickle.load(open(r'df_final.pkl', 'rb'))
     movies = pd.DataFrame(movies_list)
     movies_list = movies['title_x'].values
 
-    ifile = bz2.BZ2File(r"C:\Users\jsjat\Downloads\similarity",'rb')
+    ifile = bz2.BZ2File(r"similarity",'rb')
     similarity = pickle.load(ifile)
     index = movies[movies['title_x'] == movie].index[0]
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
