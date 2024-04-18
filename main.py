@@ -105,7 +105,7 @@ def call_homepage(email,cast,crew,genres,check):
     
     import pandas as pd 
     import numpy as np 
-    df2=pd.read_csv(r"C:\Users\jsjat\Final_Data.csv")
+    df2=pd.read_csv(r"Final_Data.csv")
     q_movies = df2.sort_values('popularity', ascending=False)
     genres=list(genres.split(","))
     cast=list(cast.split(","))
