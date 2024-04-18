@@ -59,12 +59,19 @@ def fetch_poster(movie_id):
         return None
 
 
+
 def recommended(movie,no):
-    movies_list = pickle.load(open(r'df_final.pkl', 'rb'))
+    import pandas as pd
+    import pickle
+    import requests
+    import json
+    import bz2
+    
+    movies_list = pickle.load(open(r'C:\Users\jsjat\Downloads\df_final.pkl', 'rb'))
     movies = pd.DataFrame(movies_list)
     movies_list = movies['title_x'].values
 
-    ifile = bz2.BZ2File(r"similarity",'rb')
+    ifile = bz2.BZ2File(r"C:\Users\jsjat\Downloads\similarity",'rb')
     similarity = pickle.load(ifile)
     index = movies[movies['title_x'] == movie].index[0]
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
@@ -76,12 +83,16 @@ def recommended(movie,no):
         elif(fetch_poster(movies.loc[i[0]]['movie_id'])==1):
             pass
         else:
+            print(movies.loc[i[0]]['title_x'])
             lis.append({
+                
                 "name":movies.loc[i[0]]['title_x'],
                 "poster":fetch_poster(movies.loc[i[0]]['movie_id']),
                 "movie_id": movies.loc[i[0]]['movie_id']
-            })
+            }
+                )
             count=count+1
+            
             
     return lis
 
