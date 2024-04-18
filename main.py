@@ -75,23 +75,21 @@ def recommended(movie,no):
     similarity = pickle.load(ifile)
     index = movies[movies['title_x'] == movie].index[0]
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
-    lis=[]
-    count=0
+    lis = []
+    count = 0
     for i in distance[1:]:
-        if(count>no):
+        if count > no:
             break
-        elif(fetch_poster(movies.loc[i[0]]['movie_id'])==1):
+        elif fetch_poster(movies.loc[i[0]]['movie_id']):
             pass
         else:
             print(movies.loc[i[0]]['title_x'])
             lis.append({
-                
                 "name": movies.loc[i[0]]['title_x'],
                 "poster": fetch_poster(movies.loc[i[0]]['movie_id']),
                 "movie_id": movies.loc[i[0]]['movie_id']
-            }
-                )
-            count=count+1
+            })
+            count =count+ 1
             
             
     return lis
