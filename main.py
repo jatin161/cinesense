@@ -134,15 +134,18 @@ def call_homepage(email,cast,crew,genres,check):
             list_by_crew=pd.concat([list_by_crew,q_movies[q_movies['crew'].str.contains(crew[i])][['title_x','movie_id']].head(5)])
         except:
             pass
+    list_by_trending=q_movies[['title_x','movie_id']].head(10)
     
     list_by_genres['poster']=[fetch_poster(i) for i in list_by_genres['movie_id']]
     list_by_cast['poster']=[fetch_poster(i) for i in list_by_cast['movie_id']]
     list_by_crew['poster']=[fetch_poster(i) for i in list_by_crew['movie_id']]
+    list_by_trending['poster']=[fetch_poster(i) for i in list_by_trending['movie_id']]
     
     b={}
     b.update({"genres":list_by_genres.to_dict("records")})
     b.update({"cast":list_by_cast.to_dict("records")})
     b.update({"crew":list_by_crew.to_dict("records")})
+    b.update({"trending":list_by_trending.to_dict("records")})
     
     return b 
 
