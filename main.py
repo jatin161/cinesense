@@ -105,16 +105,35 @@ def call_homepage(email,cast,crew,genres,check):
     
     import pandas as pd 
     import numpy as np 
-    df2=pd.read_csv(r"Final_Data.csv")
-    C= df2['vote_average'].mean()
-    m= df2['vote_count'].quantile(0.9)
-    q_movies = df2.copy().loc[df2['vote_count'] >= m]
-    q_movies['score'] = q_movies.apply(weighted_rating, axis=1)
-    q_movies = q_movies.sort_values('score', ascending=False)
+    df2=pd.read_csv(r"C:\Users\jsjat\Final_Data.csv")
+    q_movies = df2.sort_values('popularity', ascending=False)
+    genres=list(genres.split(","))
+    cast=list(cast.split(","))
+    crew=list(crew.split(","))
     
-    list_by_genres=q_movies[q_movies['genres'].str.contains(genres)][['title_x','movie_id']].head(5)
-    list_by_cast=q_movies[q_movies['cast'].str.contains(cast)][['title_x','movie_id']].head(5)
-    list_by_crew=q_movies[q_movies['crew'].str.contains(crew)][['title_x','movie_id']].head(5)
+    genres = [x.strip(' ') for x in genres]
+    crew = [x.strip(' ') for x in crew]
+    cast = [x.strip(' ') for x in cast]
+    
+    list_by_genres=pd.DataFrame(columns=['title_x','movie_id'])
+    list_by_cast=pd.DataFrame(columns=['title_x','movie_id'])
+    list_by_crew=pd.DataFrame(columns=['title_x','movie_id'])
+
+    print(genres,cast,crew)
+    for i in range(0,max(len(genres),len(cast),len(crew))):
+        try:
+            list_by_genres=pd.concat([list_by_genres,q_movies[q_movies['genres'].str.contains(genres[i])][['title_x','movie_id']].head(5)])
+
+        except:
+            pass
+        try:
+            list_by_cast=pd.concat([list_by_cast,q_movies[q_movies['cast'].str.contains(cast[i])][['title_x','movie_id']].head(5)])
+        except:
+            pass
+        try:
+            list_by_crew=pd.concat([list_by_crew,q_movies[q_movies['crew'].str.contains(crew[i])][['title_x','movie_id']].head(5)])
+        except:
+            pass
     
     list_by_genres['poster']=[fetch_poster(i) for i in list_by_genres['movie_id']]
     list_by_cast['poster']=[fetch_poster(i) for i in list_by_cast['movie_id']]
@@ -126,7 +145,6 @@ def call_homepage(email,cast,crew,genres,check):
     b.update({"crew":list_by_crew.to_dict("records")})
     
     return b 
-
 
 def call_save_details(email,cast,crew,genres):
         import gspread
