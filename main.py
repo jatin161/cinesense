@@ -86,8 +86,7 @@ def recommended(movie,no):
             print(movies.loc[i[0]]['title_x'])
             lis.append({
                 "name":movies.loc[i[0]]['title_x'],
-                "poster":fetch_poster(movies.loc[i[0]]['movie_id']),
-                "movie_id":movies.loc[i[0]]['movie_id']
+                "poster":fetch_poster(movies.loc[i[0]]['movie_id'])
             })
             count =count+ 1
             
