@@ -71,25 +71,24 @@ def recommended(movie,no):
     movies = pd.DataFrame(movies_list)
     movies_list = movies['title_x'].values
 
-    ifile = bz2.BZ2File(r"similarity",'rb')
+    ifile = bz2.BZ2File(r"similarity", 'rb')
     similarity = pickle.load(ifile)
     index = movies[movies['title_x'] == movie].index[0]
-    distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
+    distance = sorted(enumerate(similarity[index]), reverse=True, key=lambda x: x[1])
+
     lis = []
     count = 0
-    for i in distance[1:]:
-        if count > no:
+    for i, dist in distance[1:]:
+        if count >= no:
             break
-        elif fetch_poster(movies.loc[i[0]]['movie_id']):
-            pass
-        else:
-            print(movies.loc[i[0]]['title_x'])
+        elif not fetch_poster(movies.loc[i]['movie_id']):
+            print(movies.loc[i]['title_x'])
             lis.append({
-                "name":movies.loc[i[0]]['title_x'],
-                "poster":fetch_poster(movies.loc[i[0]]['movie_id'])
+                "name": movies.loc[i]['title_x'],
+                "poster": fetch_poster(movies.loc[i]['movie_id']),
+                "movie_id": movies.loc[i]['movie_id']
             })
-            count =count+ 1
-            
+            count += 1
             
     return lis
 
