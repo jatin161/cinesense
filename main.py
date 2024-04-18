@@ -84,7 +84,94 @@ def recommended(movie,no):
             
     return lis
 
+def weighted_rating(x):
+    import pandas as pd
+    df2=pd.read_csv(r"Final_Data.csv")
+    C= df2['vote_average'].mean()
+    m= df2['vote_count'].quantile(0.9)
+    v = x['vote_count']
+    R = x['vote_average']
+    # Calculation based on the IMDB formula
+    return (v/(v+m) * R) + (m/(m+v) * C)
 
+
+
+
+
+def call_homepage(email,cast,crew,genres,check):
+    
+    if(check==1):
+        call_save_details(email,cast,crew,genres)
+    
+    import pandas as pd 
+    import numpy as np 
+    df2=pd.read_csv(r"Final_Data.csv")
+    C= df2['vote_average'].mean()
+    m= df2['vote_count'].quantile(0.9)
+    q_movies = df2.copy().loc[df2['vote_count'] >= m]
+    q_movies['score'] = q_movies.apply(weighted_rating, axis=1)
+    q_movies = q_movies.sort_values('score', ascending=False)
+    
+    list_by_genres=q_movies[q_movies['genres'].str.contains(genres)][['title_x','movie_id']].head(5)
+    list_by_cast=q_movies[q_movies['cast'].str.contains(cast)][['title_x','movie_id']].head(5)
+    list_by_crew=q_movies[q_movies['crew'].str.contains(crew)][['title_x','movie_id']].head(5)
+    
+    list_by_genres['poster']=[fetch_poster(i) for i in list_by_genres['movie_id']]
+    list_by_cast['poster']=[fetch_poster(i) for i in list_by_cast['movie_id']]
+    list_by_crew['poster']=[fetch_poster(i) for i in list_by_crew['movie_id']]
+    
+    b={}
+    b.update({"genres":list_by_genres.to_dict("records")})
+    b.update({"cast":list_by_cast.to_dict("records")})
+    b.update({"crew":list_by_crew.to_dict("records")})
+    
+    return b 
+
+
+def call_save_details(email,cast,crew,genres):
+        import gspread
+        from oauth2client.service_account import ServiceAccountCredentials
+
+        # Define the scope of access
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+
+        # Authenticate using credentials
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(r"cinesense-5b6462fd7feb.json", scope)
+        client = gspread.authorize(credentials)
+        spreadsheet = client.open("cinesense")
+        worksheet = spreadsheet.get_worksheet(1)
+        # Find the next available row
+        next_row = len(worksheet.col_values(1)) + 1
+
+        # Add data to the next row
+        worksheet.update_cell(next_row, 1, email)
+        worksheet.update_cell(next_row, 2, cast)
+        worksheet.update_cell(next_row, 3, crew)
+        worksheet.update_cell(next_row, 4, genres)
+        return True
+
+    
+def call_home_page_by_mail(a):
+    import gspread
+    from oauth2client.service_account import ServiceAccountCredentials
+    import pandas as pd
+
+    # Define the scope of access
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+
+    # Authenticate using credentials
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(r"cinesense-5b6462fd7feb.json", scope)
+    client = gspread.authorize(credentials)
+    spreadsheet = client.open("cinesense")
+    worksheet = spreadsheet.get_worksheet(1)
+
+    all_data = worksheet.get_all_values()
+
+    data=pd.DataFrame(all_data[1:],columns=list(all_data[0]))
+    
+    b= call_homepage(list(data.email)[0],list(data.cast)[0],list(data.crew)[0],list(data.genres)[0],0)
+    return b
+    
 
 @app.get("/")
 async def root():
@@ -182,3 +269,21 @@ async def recommend_movies(movie: str, no: int):
         return recommended_movies
     else:
         return {"error": "No recommendations found"}
+
+@app.get("/call_homepage")
+async def call_homepage_endpoint(email: str, cast: str, crew: str, genres: str, check: int):
+    result = call_homepage(email, cast, crew, genres, check)
+    if result:
+        return result
+    else:
+        return {"error": "error"}
+    return result
+
+@app.get("/call_homepage_by_mail/{email}")
+async def call_homepage_by_mail(email: str):
+    result = call_home_page_by_mail(email)
+    if result:
+        return result
+    else:
+        return {"error": "error"}
+    return result
